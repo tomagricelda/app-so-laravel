@@ -1,5 +1,4 @@
-FROM php:8.4-fpm
-
+FROM php:8.3-fpm
 
 # Instalar dependencias del SO
 RUN apt-get update && apt-get install -y \
@@ -22,11 +21,11 @@ RUN docker-php-ext-install pdo pdo_mysql
 WORKDIR /app
 
 # Copiar código Laravel
-COPY ./app .
+
+COPY . /app
 
 # Instalar dependencias Laravel
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
-
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
 # Crear directorios necesarios
 RUN mkdir -p storage/logs storage/framework/sessions storage/framework/views storage/framework/cache
 
@@ -43,4 +42,5 @@ RUN mkdir -p /var/log/supervisor
 EXPOSE 8000
 
 # Comando por defecto
+
 CMD ["php", "artisan", "serve", "--host=0.0.0.0"]
